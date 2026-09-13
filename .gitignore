@@ -9,10 +9,13 @@ desktop.ini
 *.swp
 *.swo
 
-# Node / Build outputs (if any added in future)
+# Node / Build outputs
 node_modules/
+.next/
+out/
 .vercel/
 dist/
 build/
 
-.vercel
+# Local environment files
+.env*.local
