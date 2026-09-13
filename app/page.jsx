@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
@@ -31,13 +31,14 @@ export default function HomePage() {
 
   // When 5s intro animation finishes:
   // Show login portal if user is not already authenticated
-  const handleFinishIntro = () => {
+  const handleFinishIntro = useCallback(() => {
     setShowIntro(false);
     sessionStorage.setItem('chase_intro_seen', 'true');
-    if (!user) {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('chase_auth_token') : null;
+    if (!token) {
       setShowLoginPortal(true);
     }
-  };
+  }, []);
 
   const handleLoginComplete = (authenticatedUser) => {
     setShowLoginPortal(false);

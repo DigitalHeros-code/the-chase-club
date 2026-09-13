@@ -1,49 +1,59 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Zap, ArrowRight } from 'lucide-react';
 
 export default function IntroAnimation({ onFinish }) {
   const [stage, setStage] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  // Total animation: exactly 5.0 seconds
-  // Stage 0 -> blank
-  // Stage 1 -> logo pulses in         (500ms)
-  // Stage 2 -> brand name slides up   (1400ms)
-  // Stage 3 -> slogan fades in        (2600ms)
-  // Stage 4 -> actions appear         (3700ms)
-  // Finish -> transition to portal    (5000ms)
+  // Keep a ref to onFinish so parent re-renders NEVER reset our timers
+  const onFinishRef = useRef(onFinish);
+  useEffect(() => {
+    onFinishRef.current = onFinish;
+  });
 
   useEffect(() => {
-    const t1 = setTimeout(() => setStage(1), 500);
-    const t2 = setTimeout(() => setStage(2), 1400);
-    const t3 = setTimeout(() => setStage(3), 2600);
-    const t4 = setTimeout(() => setStage(4), 3700);
+    const t1 = setTimeout(() => setStage(1), 400);
+    const t2 = setTimeout(() => setStage(2), 1200);
+    const t3 = setTimeout(() => setStage(3), 2400);
+    const t4 = setTimeout(() => setStage(4), 3500);
     const t5 = setTimeout(() => {
-      if (onFinish) onFinish();
+      if (onFinishRef.current) {
+        onFinishRef.current();
+      }
     }, 5000);
 
-    // Progress bar animates from 0 → 100 over 5.0s
-    let start = null;
+    // Progress bar animates smoothly from 0 → 100% over 5.0 seconds
     const DURATION = 5000;
-    const animFrame = (ts) => {
-      if (!start) start = ts;
-      const elapsed = ts - start;
-      setProgress(Math.min(100, (elapsed / DURATION) * 100));
-      if (elapsed < DURATION) requestAnimationFrame(animFrame);
+    const startTime = performance.now();
+    let animId;
+
+    const tick = (now) => {
+      const elapsed = now - startTime;
+      const pct = Math.min(100, (elapsed / DURATION) * 100);
+      setProgress(pct);
+      if (elapsed < DURATION) {
+        animId = requestAnimationFrame(tick);
+      }
     };
-    const raf = requestAnimationFrame(animFrame);
+
+    animId = requestAnimationFrame(tick);
 
     return () => {
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
-      clearTimeout(t4); clearTimeout(t5);
-      cancelAnimationFrame(raf);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
+      if (animId) cancelAnimationFrame(animId);
     };
-  }, [onFinish]);
+  }, []); // Empty deps: executes only once on mount without being reset by re-renders
 
-  const handleSkipOrLogin = () => {
-    if (onFinish) onFinish();
+  const handleSkip = () => {
+    if (onFinishRef.current) {
+      onFinishRef.current();
+    }
   };
 
   return (
@@ -88,12 +98,12 @@ export default function IntroAnimation({ onFinish }) {
 
         {/* CTA Buttons */}
         <div className={`intro-actions ${stage >= 4 ? 'stage-active' : ''}`}>
-          <button onClick={handleSkipOrLogin} className="intro-btn-primary">
-            <span>Login &amp; Enter Portal</span>
+          <button onClick={handleSkip} className="intro-btn-primary">
+            <span>Enter Portal &rarr;</span>
             <ArrowRight size={16} />
           </button>
-          <button onClick={handleSkipOrLogin} className="intro-btn-ghost">
-            <span>Skip (5s) &rarr;</span>
+          <button onClick={handleSkip} className="intro-btn-ghost">
+            <span>Skip (5s)</span>
           </button>
         </div>
 
