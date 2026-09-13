@@ -1,0 +1,16 @@
+# System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor & IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node / Build outputs (if any added in future)
+node_modules/
+.vercel/
+dist/
+build/

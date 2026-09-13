@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Chase Club — Delhi's Running & Fitness Crew</title>
+<meta name="description" content="The Chase Club — weekly runs, race-day meetups, and a fitness crew for people who chase pace, not perfection. Delhi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECE0;
+    --paper-2:#E8E1D2;
+    --ink:#17150F;
+    --rust:#B23A2C;
+    --rust-dim:#8C2C21;
+    --olive:#6B6752;
+    --line: rgba(23,21,15,0.16);
+    --max: 1180px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+  }
+  /* paper grain, tying the whole site back to the logo's textured print */
+  body::before{
+    content:"";
+    position:fixed; inset:0; z-index:1000; pointer-events:none;
+    opacity:0.05; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  h1,h2,h3, .display{
+    font-family:'Anton', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    line-height:0.94;
+    color:var(--ink);
+    font-weight:400;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 28px;}
+  :focus-visible{outline:2px solid var(--rust); outline-offset:3px;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(241,236,224,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 28px;
+    max-width:var(--max); margin:0 auto;
+  }
+  .brand{display:flex; align-items:center; gap:12px;}
+  .brand img{height:40px; width:auto;}
+  .brand span{font-family:'Anton'; font-size:1.05rem; letter-spacing:0.02em; display:none;}
+  .nav-links{display:flex; gap:34px; font-size:0.95rem; font-weight:500; align-items:center;}
+  .nav-links a:not(.nav-cta){opacity:0.75; transition:opacity .15s;}
+  .nav-links a:not(.nav-cta):hover{opacity:1;}
+  .nav-cta{
+    background:var(--rust); color:var(--paper); font-weight:700;
+    padding:11px 22px; font-size:0.9rem;
+  }
+  .menu-btn{display:none; background:none; border:none; color:var(--ink); font-size:1.6rem; cursor:pointer;}
+
+  @media (max-width:800px){
+    .nav-links{
+      position:fixed; top:68px; left:0; right:0;
+      background:var(--paper);
+      flex-direction:column; align-items:flex-start; gap:0;
+      max-height:0; overflow:hidden;
+      border-bottom:1px solid var(--line);
+      transition:max-height .25s ease;
+    }
+    .nav-links.open{max-height:340px;}
+    .nav-links a:not(.nav-cta){padding:16px 28px; width:100%; border-top:1px solid var(--line);}
+    .nav-cta{margin:16px 28px;}
+    .menu-btn{display:block;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{padding:64px 0 40px;}
+  .hero-inner{
+    display:grid; grid-template-columns:0.9fr 1.1fr; gap:56px; align-items:center;
+  }
+  .hero-mark{
+    background:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    padding:38px;
+    transform:rotate(-2deg);
+  }
+  .hero-mark img{width:100%; max-width:340px; filter:invert(1) brightness(1.15);}
+  .eyebrow-stat{
+    display:inline-flex; gap:10px; align-items:baseline;
+    font-size:0.85rem; color:var(--rust-dim); font-weight:700;
+    margin-bottom:20px; text-transform:uppercase; letter-spacing:0.04em;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 6.4vw, 4.4rem);
+    margin-bottom:20px;
+  }
+  .hero p.lede{
+    font-size:1.1rem; max-width:480px; color:var(--ink); opacity:0.78;
+    margin-bottom:30px;
+  }
+  .hero-ctas{display:flex; gap:16px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--rust); color:var(--paper); font-weight:700;
+    padding:15px 30px; font-size:0.98rem;
+    display:inline-block; transition:background .15s;
+  }
+  .btn-primary:hover{background:var(--rust-dim);}
+  .btn-ghost{
+    border:1.5px solid var(--ink); color:var(--ink); font-weight:700;
+    padding:15px 30px; font-size:0.98rem;
+    display:inline-block;
+  }
+  .stat-row{display:flex; gap:48px; margin-top:52px; flex-wrap:wrap;}
+  .stat-row .num{font-family:'Anton'; font-size:2.4rem; color:var(--ink); line-height:1;}
+  .stat-row .label{font-size:0.83rem; color:var(--olive); margin-top:4px;}
+
+  @media (max-width:840px){
+    .hero-inner{grid-template-columns:1fr; gap:36px;}
+    .hero-mark{order:-1; padding:26px;}
+    .hero-mark img{max-width:220px;}
+  }
+
+  /* ---------- SECTION HEADS ---------- */
+  section{padding:80px 0;}
+  .sec-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    gap:24px; margin-bottom:44px; border-bottom:2px solid var(--ink); padding-bottom:20px;
+  }
+  .sec-head h2{font-size:clamp(1.9rem, 3.8vw, 2.6rem);}
+  .sec-head p{max-width:340px; opacity:0.65; font-size:0.96rem;}
+
+  /* ---------- EVENTS (inverted poster panel) ---------- */
+  .events{background:var(--ink); color:var(--paper);}
+  .events .sec-head{border-bottom:2px solid var(--paper);}
+  .events .sec-head h2{color:var(--paper);}
+  .events .sec-head p{color:var(--paper); opacity:0.6;}
+  .event-list{display:flex; flex-direction:column;}
+  .event-row{
+    display:grid;
+    grid-template-columns:76px 1fr auto auto;
+    gap:26px; align-items:center;
+    padding:24px 0; border-bottom:1px solid rgba(241,236,224,0.18);
+  }
+  .event-row:first-child{border-top:1px solid rgba(241,236,224,0.18);}
+  .event-num{font-family:'Anton'; font-size:2rem; color:var(--rust);}
+  .event-main h3{font-size:1.3rem; text-transform:none; letter-spacing:0; margin-bottom:6px; font-weight:700; font-family:'Inter'; color:var(--paper);}
+  .event-meta{display:flex; gap:16px; font-size:0.86rem; opacity:0.62; flex-wrap:wrap; color:var(--paper);}
+  .event-date{text-align:right; font-size:0.9rem; opacity:0.75; white-space:nowrap; color:var(--paper);}
+  .event-date b{display:block; font-size:1.4rem; font-family:'Anton'; color:var(--paper);}
+  .event-cta{
+    border:1.5px solid var(--rust); color:var(--rust);
+    padding:10px 20px; font-size:0.85rem; font-weight:700;
+    white-space:nowrap; transition:background .15s, color .15s;
+  }
+  .event-cta:hover{background:var(--rust); color:var(--paper);}
+  @media (max-width:720px){
+    .event-row{grid-template-columns:44px 1fr; grid-template-rows:auto auto; row-gap:10px;}
+    .event-date{grid-column:2; text-align:left; order:3;}
+    .event-cta{grid-column:2; order:4; justify-self:start;}
+    .event-num{font-size:1.5rem;}
+  }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:36px;}
+  .step{border-top:3px solid var(--rust); padding-top:20px;}
+  .step .n{font-family:'Anton'; font-size:1rem; color:var(--rust); margin-bottom:12px; display:block;}
+  .step h3{font-size:1.25rem; text-transform:none; letter-spacing:0; margin-bottom:10px; font-weight:700; font-family:'Inter';}
+  .step p{opacity:0.72; font-size:0.95rem;}
+  @media (max-width:760px){.steps{grid-template-columns:1fr; gap:32px;}}
+
+  /* ---------- COMMUNITY STRIP ---------- */
+  .strip{display:grid; grid-template-columns:1.1fr 1fr 1fr 1fr; gap:12px;}
+  .strip .tile{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    aspect-ratio:1/1; display:flex; align-items:flex-end; padding:16px;
+    font-size:0.84rem; color:var(--ink); opacity:0.78;
+  }
+  .strip .tile.big{grid-row:span 2; aspect-ratio:auto; background:var(--ink); color:var(--paper); opacity:1;}
+  @media (max-width:760px){.strip{grid-template-columns:1fr 1fr;} .strip .tile.big{grid-row:span 1; aspect-ratio:1/1;}}
+
+  /* ---------- JOIN / CONTACT ---------- */
+  .join{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start;}
+  .join h2{font-size:clamp(1.9rem,3.8vw,2.6rem); margin-bottom:16px;}
+  .join p{opacity:0.72; max-width:400px;}
+  form{display:flex; flex-direction:column; gap:16px;}
+  label{font-size:0.8rem; opacity:0.65; margin-bottom:6px; display:block;}
+  input, select{
+    width:100%; background:var(--paper); border:1.5px solid var(--ink); color:var(--ink);
+    padding:12px 14px; font-family:inherit; font-size:0.95rem;
+  }
+  input:focus, select:focus{border-color:var(--rust);}
+  .field{display:flex; flex-direction:column;}
+  .row-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  button.submit{
+    background:var(--rust); color:var(--paper); font-weight:700; border:none;
+    padding:15px 20px; font-size:0.98rem; cursor:pointer; margin-top:6px;
+  }
+  .form-note{font-size:0.78rem; opacity:0.55; margin-top:2px;}
+  @media (max-width:800px){.join{grid-template-columns:1fr; gap:36px;} .row-2{grid-template-columns:1fr;}}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--ink); color:var(--paper); padding:48px 0 32px;}
+  .foot-top{display:flex; align-items:center; gap:14px; margin-bottom:36px;}
+  .foot-top img{height:38px; filter:invert(1) brightness(1.15);}
+  .foot-row{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px;}
+  .foot-col h4{font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.55; margin-bottom:14px; font-weight:600;}
+  .foot-col a, .foot-col p{display:block; font-size:0.9rem; opacity:0.8; margin-bottom:8px; color:var(--paper);}
+  .foot-bottom{margin-top:40px; padding-top:22px; border-top:1px solid rgba(241,236,224,0.18); font-size:0.8rem; opacity:0.5; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="#top" class="brand"><img src="assets/chase-club-logo.jpg" alt="The Chase Club"></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#events">Events</a>
+      <a href="#how">How it works</a>
+      <a href="#community">Community</a>
+      <a href="#join" class="nav-cta">Join a run</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">&#9776;</button>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap hero-inner">
+    <div class="hero-mark">
+      <img src="assets/chase-club-logo.jpg" alt="The Chase Club mark">
+    </div>
+    <div>
+      <div class="eyebrow-stat">Delhi &middot; Every Sunday, 5:45 AM</div>
+      <h1>We chase pace, not perfection.</h1>
+      <p class="lede">The Chase Club is a running and fitness crew for people who'd rather show up at dawn than talk about showing up. Weekly runs, race meetups, and a group that keeps you honest about the alarm.</p>
+      <div class="hero-ctas">
+        <a href="#join" class="btn-primary">Join the next run</a>
+        <a href="#events" class="btn-ghost">See upcoming events</a>
+      </div>
+      <div class="stat-row">
+        <div><div class="num">240+</div><div class="label">Runners in the crew</div></div>
+        <div><div class="num">3</div><div class="label">Runs every week</div></div>
+        <div><div class="num">18</div><div class="label">Events hosted this year</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="events" id="events">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Upcoming events</h2>
+      <p>Sign up in under a minute. Bring your own bottle, we'll bring the pacers.</p>
+    </div>
+    <div class="event-list">
+
+      <div class="event-row">
+        <div class="event-num">01</div>
+        <div class="event-main">
+          <h3>Sunday Long Run — Lodhi Loop</h3>
+          <div class="event-meta"><span>10K &amp; 5K groups</span><span>Lodhi Garden Gate 2</span><span>Pacers provided</span></div>
+        </div>
+        <div class="event-date">Sun, 5:45 AM<b>21 Sep</b></div>
+        <a href="#join" class="event-cta">Register</a>
+      </div>
+
+      <div class="event-row">
+        <div class="event-num">02</div>
+        <div class="event-main">
+          <h3>Track Tuesdays — Speed Work</h3>
+          <div class="event-meta"><span>Intervals: 400m–1600m</span><span>Yamuna Sports Complex</span><span>All levels</span></div>
+        </div>
+        <div class="event-date">Tue, 6:00 AM<b>24 Sep</b></div>
+        <a href="#join" class="event-cta">Register</a>
+      </div>
+
+      <div class="event-row">
+        <div class="event-num">03</div>
+        <div class="event-main">
+          <h3>The Chase 10K — Season Opener</h3>
+          <div class="event-meta"><span>Timed race</span><span>India Gate Circuit</span><span>Medals + brunch</span></div>
+        </div>
+        <div class="event-date">Sun, 6:00 AM<b>12 Oct</b></div>
+        <a href="#join" class="event-cta">Register</a>
+      </div>
+
+      <div class="event-row">
+        <div class="event-num">04</div>
+        <div class="event-main">
+          <h3>Recovery Run &amp; Mobility</h3>
+          <div class="event-meta"><span>Easy 5K + stretch session</span><span>Nehru Park</span><span>Open to all fitness levels</span></div>
+        </div>
+        <div class="event-date">Wed, 6:15 AM<b>15 Oct</b></div>
+        <a href="#join" class="event-cta">Register</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>How it works</h2>
+      <p>Three steps between you and your first run with the club.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="n">Step 1</span>
+        <h3>Fill the join form</h3>
+        <p>Tell us your pace, your usual distance, and which mornings work. Takes about a minute.</p>
+      </div>
+      <div class="step">
+        <span class="n">Step 2</span>
+        <h3>Get added to the crew chat</h3>
+        <p>We'll drop you into the WhatsApp group where routes, meet points, and changes get shared.</p>
+      </div>
+      <div class="step">
+        <span class="n">Step 3</span>
+        <h3>Show up and run</h3>
+        <p>Turn up at the meet point. Someone will run your pace — that's the only rule we enforce.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="community">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>From the last few weeks</h2>
+      <p>A crew that runs together on weekdays and races together on weekends.</p>
+    </div>
+    <div class="strip">
+      <div class="tile big">Season opener briefing, India Gate — 7:10 AM</div>
+      <div class="tile">Track Tuesday, splits held under 1:52</div>
+      <div class="tile">Post-run chai stop, Lodhi Colony</div>
+      <div class="tile">New joiner's first 10K finish</div>
+    </div>
+  </div>
+</section>
+
+<section id="join">
+  <div class="wrap join">
+    <div>
+      <h2>Ready to run with us?</h2>
+      <p>Fill this in and we'll add you to the crew chat before the next scheduled run. No membership fee — just show up.</p>
+    </div>
+    <form id="joinForm">
+      <div class="row-2">
+        <div class="field"><label for="name">Full name</label><input id="name" name="name" type="text" required></div>
+        <div class="field"><label for="phone">WhatsApp number</label><input id="phone" name="phone" type="tel" required></div>
+      </div>
+      <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required></div>
+      <div class="row-2">
+        <div class="field">
+          <label for="pace">Usual pace</label>
+          <select id="pace" name="pace">
+            <option>Under 5 min/km</option>
+            <option>5–6 min/km</option>
+            <option>6–7 min/km</option>
+            <option>Just starting out</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="event">Interested in</label>
+          <select id="event" name="event">
+            <option>Sunday Long Run — 21 Sep</option>
+            <option>Track Tuesdays — 24 Sep</option>
+            <option>The Chase 10K — 12 Oct</option>
+            <option>Recovery Run — 15 Oct</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="submit">Send my details</button>
+      <p class="form-note">This form currently opens your email app to send your details — hook it up to a form service for automatic registration. See the note below the page.</p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <img src="assets/chase-club-logo.jpg" alt="The Chase Club">
+    </div>
+    <div class="foot-row">
+      <div class="foot-col">
+        <h4>The Chase Club</h4>
+        <p style="opacity:0.6; max-width:220px;">A running &amp; fitness crew based in Delhi.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Runs</h4>
+        <a href="#events">Sunday Long Run</a>
+        <a href="#events">Track Tuesdays</a>
+        <a href="#events">The Chase 10K</a>
+      </div>
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <a href="mailto:hello@theclaseclub.in">hello@theclaseclub.in</a>
+        <a href="#">Instagram</a>
+        <a href="#">WhatsApp community</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 The Chase Club</span>
+      <span>Built for theclaseclub.in</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('menuBtn').addEventListener('click', function(){
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+  document.getElementById('joinForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var f = new FormData(e.target);
+    var body = 'Name: ' + f.get('name') + '%0D%0A' +
+                'Phone: ' + f.get('phone') + '%0D%0A' +
+                'Email: ' + f.get('email') + '%0D%0A' +
+                'Pace: ' + f.get('pace') + '%0D%0A' +
+                'Interested in: ' + f.get('event');
+    window.location.href = 'mailto:hello@theclaseclub.in?subject=Join%20The%20Chase%20Club&body=' + body;
+  });
+</script>
+
+</body>
+</html>
