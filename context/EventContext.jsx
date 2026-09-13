@@ -64,59 +64,117 @@ export function EventProvider({ children }) {
   const [registrations, setRegistrations] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // Sync with API on mount
   useEffect(() => {
-    const savedEvents = localStorage.getItem('chase_events_data');
-    if (savedEvents) {
+    async function loadData() {
       try {
-        setEvents(JSON.parse(savedEvents));
-      } catch (e) {
-        setEvents(initialDefaultEvents);
+        const res = await fetch('/api/events');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.events && data.events.length > 0) {
+            setEvents(data.events);
+            localStorage.setItem('chase_events_data', JSON.stringify(data.events));
+          } else {
+            // Local fallback
+            const local = localStorage.getItem('chase_events_data');
+            setEvents(local ? JSON.parse(local) : initialDefaultEvents);
+          }
+        }
+      } catch (err) {
+        const local = localStorage.getItem('chase_events_data');
+        setEvents(local ? JSON.parse(local) : initialDefaultEvents);
       }
-    } else {
-      setEvents(initialDefaultEvents);
-      localStorage.setItem('chase_events_data', JSON.stringify(initialDefaultEvents));
+
+      try {
+        const regRes = await fetch('/api/registrations');
+        if (regRes.ok) {
+          const regData = await regRes.json();
+          if (regData.registrations) {
+            setRegistrations(regData.registrations);
+            localStorage.setItem('chase_event_registrations', JSON.stringify(regData.registrations));
+          }
+        }
+      } catch (err) {
+        const localReg = localStorage.getItem('chase_event_registrations');
+        if (localReg) setRegistrations(JSON.parse(localReg));
+      }
+
+      setIsLoaded(true);
     }
 
-    const savedRegistrations = localStorage.getItem('chase_event_registrations');
-    if (savedRegistrations) {
-      try {
-        setRegistrations(JSON.parse(savedRegistrations));
-      } catch (e) {
-        setRegistrations([]);
-      }
-    }
-    setIsLoaded(true);
+    loadData();
   }, []);
 
-  const addEvent = (newEvent) => {
+  const addEvent = async (newEvent) => {
     const eventWithId = {
       ...newEvent,
       id: 'evt-' + Date.now(),
       status: newEvent.status || 'upcoming'
     };
+    
+    // Update local state immediately
     const updated = [eventWithId, ...events];
     setEvents(updated);
     localStorage.setItem('chase_events_data', JSON.stringify(updated));
+
+    // Post to shared server-side API so all other users/devices receive it
+    try {
+      await fetch('/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eventWithId)
+      });
+    } catch (e) {
+      console.warn('Sync to server failed:', e);
+    }
+
     return eventWithId;
   };
 
-  const removeEvent = (id) => {
+  const removeEvent = async (id) => {
     const updated = events.filter(e => e.id !== id);
     setEvents(updated);
     localStorage.setItem('chase_events_data', JSON.stringify(updated));
+
+    try {
+      await fetch(`/api/events?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE'
+      });
+    } catch (e) {
+      console.warn('Sync delete to server failed:', e);
+    }
   };
 
-  const removeAllEvents = () => {
+  const removeAllEvents = async () => {
     setEvents([]);
     localStorage.setItem('chase_events_data', JSON.stringify([]));
+
+    try {
+      await fetch('/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'clear_all' })
+      });
+    } catch (e) {
+      console.warn('Sync clear all to server failed:', e);
+    }
   };
 
-  const resetDefaultEvents = () => {
+  const resetDefaultEvents = async () => {
     setEvents(initialDefaultEvents);
     localStorage.setItem('chase_events_data', JSON.stringify(initialDefaultEvents));
+    try {
+      await fetch('/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'reset' })
+      });
+    } catch (e) {
+      console.warn('Sync reset to server failed:', e);
+    }
   };
 
-  const registerForEvent = (registrationData) => {
+  const registerForEvent = async (registrationData) => {
     const newReg = {
       id: 'reg-' + Date.now(),
       ...registrationData,
@@ -125,6 +183,17 @@ export function EventProvider({ children }) {
     const updated = [newReg, ...registrations];
     setRegistrations(updated);
     localStorage.setItem('chase_event_registrations', JSON.stringify(updated));
+
+    try {
+      await fetch('/api/registrations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newReg)
+      });
+    } catch (e) {
+      console.warn('Sync registration to server failed:', e);
+    }
+
     return newReg;
   };
 

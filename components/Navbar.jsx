@@ -7,7 +7,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { Sun, Moon, Palette, Shield, User, LogOut, Menu, X, Calendar, Sparkles } from 'lucide-react';
 
-export default function Navbar({ onOpenRegister }) {
+export default function Navbar({ onOpenRegister, onOpenLogin }) {
   const { theme, toggleTheme } = useTheme();
   const { user, logout, isAdmin } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -72,6 +72,10 @@ export default function Navbar({ onOpenRegister }) {
                 <LogOut size={16} />
               </button>
             </div>
+          ) : onOpenLogin ? (
+            <button onClick={onOpenLogin} className="btn btn-secondary btn-sm">
+              Sign In / Admin
+            </button>
           ) : (
             <Link href="/login" className="btn btn-secondary btn-sm">
               Sign In

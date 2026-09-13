@@ -7,17 +7,21 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import RegisterModal from '../components/RegisterModal';
 import IntroAnimation from '../components/IntroAnimation';
+import LoginPortal from '../components/LoginPortal';
 import { useEvents } from '../context/EventContext';
-import { ArrowRight, Calendar, MapPin, Clock, Users, Zap, Shield, Play } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { ArrowRight, Calendar, MapPin, Clock, Users, Zap, Shield, Play, CheckCircle2, Sparkles, LogOut } from 'lucide-react';
 
 export default function HomePage() {
   const [showIntro, setShowIntro] = useState(true);
+  const [showLoginPortal, setShowLoginPortal] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [selectedEventName, setSelectedEventName] = useState('');
   const { events } = useEvents();
+  const { user, logout, isAdmin } = useAuth();
   const router = useRouter();
 
-  // Show intro animation on first page load; skip if already seen in current session
+  // On initial mount: if intro was seen in this session, skip intro
   useEffect(() => {
     const hasSeenIntro = sessionStorage.getItem('chase_intro_seen');
     if (hasSeenIntro === 'true') {
@@ -25,11 +29,21 @@ export default function HomePage() {
     }
   }, []);
 
+  // When 5s intro animation finishes:
+  // Show login portal if user is not already authenticated
   const handleFinishIntro = () => {
     setShowIntro(false);
     sessionStorage.setItem('chase_intro_seen', 'true');
-    // Redirect to login after animation
-    router.push('/login');
+    if (!user) {
+      setShowLoginPortal(true);
+    }
+  };
+
+  const handleLoginComplete = (authenticatedUser) => {
+    setShowLoginPortal(false);
+    if (authenticatedUser?.role === 'admin') {
+      router.push('/admin');
+    }
   };
 
   const handleOpenRegister = (eventTitle = '') => {
@@ -77,9 +91,43 @@ export default function HomePage() {
 
   return (
     <>
+      {/* 1. Exactly 5-Second Intro Animation */}
       {showIntro && <IntroAnimation onFinish={handleFinishIntro} />}
 
-      <Navbar onOpenRegister={() => handleOpenRegister()} />
+      {/* 2. Login Portal (Appears immediately after 5s animation if not logged in) */}
+      {showLoginPortal && (
+        <LoginPortal
+          onComplete={handleLoginComplete}
+          onCancel={() => setShowLoginPortal(false)}
+        />
+      )}
+
+      {/* 3. Sticky Admin Control Bar (if logged in as admin) */}
+      {isAdmin && (
+        <div className="admin-sticky-bar">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <Shield size={16} color="var(--crimson)" />
+            <span style={{ fontWeight: 600 }}>
+              Logged in as <strong>{user?.name || 'Club Admin'}</strong> &bull; Events you create/delete here sync live for all runners.
+            </span>
+          </div>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <Link href="/admin" className="btn btn-primary btn-sm" style={{ padding: '5px 14px', fontSize: '0.78rem' }}>
+              <Shield size={13} />
+              <span>Open Event Control Centre &rarr;</span>
+            </Link>
+            <button onClick={logout} className="btn btn-secondary btn-sm" style={{ padding: '5px 12px', fontSize: '0.78rem' }}>
+              <LogOut size={13} />
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      <Navbar
+        onOpenRegister={() => handleOpenRegister()}
+        onOpenLogin={() => setShowLoginPortal(true)}
+      />
 
       <main>
         {/* HERO SECTION */}
@@ -90,6 +138,14 @@ export default function HomePage() {
                 <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--crimson)' }}></span>
                 <span>NEXT RUN &bull; SUNDAY 5:45 AM &bull; LODHI GARDEN</span>
               </div>
+
+              {/* User greeting if authenticated */}
+              {user && (
+                <div style={{ marginBottom: 14, display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', padding: '4px 12px', borderRadius: 'var(--radius-full)', fontSize: '0.85rem' }}>
+                  <Sparkles size={14} color="var(--volt)" />
+                  <span>Welcome back, <strong>{user.name}</strong> ({user.role === 'admin' ? 'Admin' : 'Runner'})</span>
+                </div>
+              )}
 
               <h1 className="hero-title">
                 WE CHASE <span style={{ color: 'var(--crimson)' }}>PACE</span>,<br />NOT PERFECTION.
@@ -133,10 +189,23 @@ export default function HomePage() {
                 <Link href="/events" className="btn btn-secondary">
                   <span>View All Sessions</span>
                 </Link>
+                {isAdmin ? (
+                  <Link href="/admin" className="btn btn-secondary" style={{ borderColor: 'var(--crimson)', color: 'var(--crimson)' }}>
+                    <Shield size={14} />
+                    <span>Manage Events</span>
+                  </Link>
+                ) : (
+                  <button 
+                    onClick={() => setShowLoginPortal(true)} 
+                    className="btn btn-secondary"
+                  >
+                    <span>{user ? 'My Profile' : 'Admin / Member Login'}</span>
+                  </button>
+                )}
                 <button 
                   onClick={() => setShowIntro(true)} 
                   className="btn btn-secondary" 
-                  title="Replay intro animation"
+                  title="Replay 5s intro animation"
                 >
                   <Play size={14} />
                   <span>Replay Intro</span>
@@ -149,8 +218,8 @@ export default function HomePage() {
                   <div className="lbl">Active Runners</div>
                 </div>
                 <div className="stat-item">
-                  <div className="num">3</div>
-                  <div className="lbl">Runs Every Week</div>
+                  <div className="num">{events.length}</div>
+                  <div className="lbl">Live Sessions</div>
                 </div>
                 <div className="stat-item">
                   <div className="num">100%</div>
@@ -184,12 +253,20 @@ export default function HomePage() {
                 <span className="section-eyebrow">Paced Sessions &amp; Races</span>
                 <h2 className="section-title">Upcoming &amp; Ongoing Events</h2>
                 <p className="section-sub">
-                  Every run is free to attend with dedicated pacers, bag drop points, and post-run breakfast.
+                  Posted live by Club Admin. Every run is free to attend with dedicated pacers, bag drop points, and post-run breakfast.
                 </p>
               </div>
-              <Link href="/events" className="btn btn-secondary">
-                <span>Discover All Sessions &rarr;</span>
-              </Link>
+              <div style={{ display: 'flex', gap: 12 }}>
+                {isAdmin && (
+                  <Link href="/admin" className="btn btn-primary">
+                    <Shield size={15} />
+                    <span>+ Post Event as Admin</span>
+                  </Link>
+                )}
+                <Link href="/events" className="btn btn-secondary">
+                  <span>Discover All Sessions &rarr;</span>
+                </Link>
+              </div>
             </div>
 
             {events.length > 0 ? (
@@ -245,7 +322,7 @@ export default function HomePage() {
                 <Calendar size={36} color="var(--crimson)" style={{ margin: '0 auto 12px' }} />
                 <h3>No Events Currently Posted</h3>
                 <p style={{ color: 'var(--text-muted)', maxWidth: 420, margin: '8px auto 20px' }}>
-                  The admin has cleared current events. You can sign up as a registered member to receive instant WhatsApp notifications when new runs are added!
+                  The admin has cleared current events. Check back soon or sign in as Admin to post new sessions!
                 </p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                   <button onClick={() => handleOpenRegister('General Crew Roster')} className="btn btn-primary btn-sm">
