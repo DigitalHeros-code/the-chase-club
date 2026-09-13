@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discover Events &bull; The Chase Club Delhi</title>
+  <meta name="description" content="Explore all upcoming runs, track intervals, races, and recovery sessions across Delhi with The Chase Club.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #08090C;
+      --bg-surface: #0E1017;
+      --bg-card: rgba(18, 21, 30, 0.75);
+      --bg-card-hover: rgba(26, 31, 44, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --crimson: #FF462D;
+      --crimson-dark: #D6331D;
+      --crimson-glow: rgba(255, 70, 45, 0.4);
+      --volt: #CCFF00;
+      --volt-glow: rgba(204, 255, 0, 0.3);
+      --text-main: #FFFFFF;
+      --text-muted: #9BA3B8;
+      --text-dim: #60677D;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --max-width: 1200px;
+      --font-display: 'Outfit', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'Space Grotesk', monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      color-scheme: dark;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient background glows */
+    body::before {
+      content: "";
+      position: fixed;
+      top: -150px;
+      right: 10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 70, 45, 0.1) 0%, rgba(8, 9, 12, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--text-main);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    /* NAVBAR */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8, 9, 12, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 76px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    .brand-logo-frame {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-links a:not(.btn) {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      position: relative;
+      padding: 6px 0;
+    }
+
+    .nav-links a:not(.btn).active,
+    .nav-links a:not(.btn):hover {
+      color: var(--text-main);
+    }
+
+    .nav-links a:not(.btn).active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--crimson);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border-radius: var(--radius-full);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-dark) 100%);
+      color: #fff;
+      box-shadow: 0 4px 20px var(--crimson-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(255, 70, 45, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-subtle);
+      color: #fff;
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .btn-sm {
+      padding: 8px 18px;
+      font-size: 0.85rem;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* HERO */
+    .events-hero {
+      padding: 60px 0 40px;
+      text-align: center;
+    }
+
+    .events-hero h1 {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .events-hero p {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      max-width: 650px;
+      margin: 0 auto 36px;
+    }
+
+    /* FILTER BAR */
+    .controls-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      backdrop-filter: blur(20px);
+      margin-bottom: 40px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 14px 22px 14px 46px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--crimson);
+      box-shadow: 0 0 0 3px rgba(255, 70, 45, 0.2);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 1.1rem;
+    }
+
+    /* Category Filter Pills */
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .filter-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill:hover {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .filter-pill.active {
+      background: rgba(255, 70, 45, 0.15);
+      border-color: var(--crimson);
+      color: #fff;
+      box-shadow: 0 0 14px rgba(255, 70, 45, 0.3);
+    }
+
+    /* EVENTS CATALOG GRID */
+    .events-catalog {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    .event-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(16px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .event-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 70, 45, 0.35);
+      transform: translateY(-4px);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .date-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      text-align: center;
+      min-width: 60px;
+    }
+
+    .date-day {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .date-month {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--crimson);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+
+    .category-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      background: rgba(204, 255, 0, 0.08);
+      color: var(--volt);
+      border: 1px solid rgba(204, 255, 0, 0.2);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .category-badge.race {
+      background: rgba(255, 70, 45, 0.1);
+      color: var(--crimson);
+      border-color: rgba(255, 70, 45, 0.25);
+    }
+
+    .event-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .event-desc {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .event-meta-details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 0;
+      margin-bottom: 20px;
+      font-size: 0.88rem;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    .meta-icon {
+      color: var(--volt);
+      font-size: 0.95rem;
+      width: 18px;
+    }
+
+    .pacer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .pacer-tag {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .spots-left {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    /* MODAL */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      max-width: 480px;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+
+    .modal-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .form-control {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      color: #fff;
+      font-family: inherit;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--crimson);
+    }
+
+    .close-modal-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      background: #050608;
+      border-top: 1px solid var(--border-subtle);
+      padding: 60px 0 30px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .events-catalog {
+        grid-template-columns: 1fr;
+      }
+      .nav-links {
+        position: fixed;
+        top: 76px;
+        left: 0;
+        right: 0;
+        background: rgba(14, 16, 23, 0.98);
+        flex-direction: column;
+        padding: 30px;
+        gap: 20px;
+        transform: translateY(-120%);
+        transition: transform 0.3s ease;
+      }
+      .nav-links.open {
+        transform: translateY(0);
+      }
+      .menu-toggle {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-logo-frame">
+          <img src="assets/chase-club-logo.jpg" alt="The Chase Club Logo">
+        </div>
+        <span>THE CHASE CLUB</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="events.html" class="active">Discover Events</a>
+        <a href="index.html#community">Community</a>
+        <a href="index.html#join" class="btn btn-primary btn-sm">Join The Crew</a>
+      </nav>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+        &#9776;
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="events-hero">
+      <div class="container">
+        <span style="font-family:var(--font-mono); font-size:0.85rem; color:var(--volt); font-weight:700; text-transform:uppercase; letter-spacing:0.1em; display:block; margin-bottom:12px;">
+          &bull; Delhi Running Schedule &bull;
+        </span>
+        <h1>Discover Club Runs &amp; Races</h1>
+        <p>
+          Explore weekly paced long runs, track intervals, official Delhi race meetups, and recovery sessions. All paces welcomed with dedicated crew pacers.
+        </p>
+
+        <!-- CONTROLS & SEARCH BAR -->
+        <div class="controls-wrapper">
+          <div class="search-row">
+            <div class="search-input-wrap">
+              <span class="search-icon">&#128269;</span>
+              <input type="text" id="searchInput" class="search-input" placeholder="Search by location (e.g. Lodhi, Nehru Park), distance (10K, 5K), or format...">
+            </div>
+          </div>
+
+          <div class="filter-pills">
+            <span style="font-size:0.85rem; color:var(--text-dim); margin-right:6px; font-weight:600;">Filter:</span>
+            <button class="filter-pill active" data-category="all">All Sessions</button>
+            <button class="filter-pill" data-category="long-run">Sunday Long Runs</button>
+            <button class="filter-pill" data-category="track">Track &amp; Intervals</button>
+            <button class="filter-pill" data-category="race">Races &amp; Timed</button>
+            <button class="filter-pill" data-category="recovery">Recovery &amp; Social</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVENTS LISTING -->
+    <section>
+      <div class="container">
+        <div class="events-catalog" id="eventsCatalog">
+
+          <!-- Event 1 -->
+          <div class="event-card" data-category="long-run" data-distance="10K 5K" data-location="Lodhi Garden Gate 2">
+            <div>
+              <div class="card-top">
+                <div class="date-box">
+                  <div class="date-day">21</div>
+                  <div class="date-month">Sep</div>
+                </div>
+                <span class="category-badge">Long Run</span>
+              </div>
+              <h3 class="event-title">Sunday Long Run — Lodhi Garden Loop</h3>
+              <p class="event-desc">
+                Delhi's iconic dawn loop through heritage tombs and shaded avenues. Paced packs for 5K and 10K.
+              </p>
+              <div class="event-meta-details">
+                <div class="meta-row">
+                  <span class="meta-icon">&#128337;</span>
+                  <span>Sun, 5:45 AM &bull; 5K &amp; 10K Paced</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon">&#128205;</span>
+                  <span>Lodhi Garden Gate 2 (Bag Drop Available)</span>
+                </div>
+                <div>
+                  <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:4px;">Pacers on Duty:</div>
+                  <div class="pacer-tags">
+                    <span class="pacer-tag">4:45/km</span>
+                    <span class="pacer-tag">5:30/km</span>
+                    <span class="pacer-tag">6:15/km</span>
+                    <span class="pacer-tag">7:00 Run-Walk</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <span class="spots-left">&#x25CF; Free &bull; 80+ Runners</span>
+              <button class="btn btn-primary btn-sm rsvp-btn" data-event-name="Sunday Long Run — Lodhi Loop (21 Sep)">RSVP &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Event 2 -->
+          <div class="event-card" data-category="track" data-distance="Intervals" data-location="Yamuna Sports Complex">
+            <div>
+              <div class="card-top">
+                <div class="date-box">
+                  <div class="date-day">24</div>
+                  <div class="date-month">Sep</div>
+                </div>
+                <span class="category-badge">Track Intervals</span>
+              </div>
+              <h3 class="event-title">Track Tuesdays — Speed &amp; VO2 Max</h3>
+              <p class="event-desc">
+                400m to 1600m interval ladders under morning floodlights. Cadence drills, hip mobility, and coached splits.
+              </p>
+              <div class="event-meta-details">
+                <div class="meta-row">
+                  <span class="meta-icon">&#128337;</span>
+                  <span>Tue, 6:00 AM &bull; Synthetic 400m Track</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon">&#128205;</span>
+                  <span>Yamuna Sports Complex, Surajmal Vihar</span>
+                </div>
+                <div>
+                  <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:4px;">Workouts:</div>
+                  <div class="pacer-tags">
+                    <span class="pacer-tag">Group A: 6x800m</span>
+                    <span class="pacer-tag">Group B: 8x400m</span>
+                    <span class="pacer-tag">Beginners: Intro Track</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <span class="spots-left">&#x25CF; Free Entry</span>
+              <button class="btn btn-primary btn-sm rsvp-btn" data-event-name="Track Tuesdays — Speedwork (24 Sep)">RSVP &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Event 3 -->
+          <div class="event-card" data-category="long-run" data-distance="8K" data-location="Chanakyapuri">
+            <div>
+              <div class="card-top">
+                <div class="date-box">
+                  <div class="date-day">28</div>
+                  <div class="date-month">Sep</div>
+                </div>
+                <span class="category-badge">Tempo Run</span>
+              </div>
+              <h3 class="event-title">Thursday Tempo — Diplomatic Enclave</h3>
+              <p class="event-desc">
+                Wide, traffic-free tree-lined avenues of Chanakyapuri. Sustained aerobic tempo efforts holding steady threshold.
+              </p>
+              <div class="event-meta-details">
+                <div class="meta-row">
+                  <span class="meta-icon">&#128337;</span>
+                  <span>Thu, 6:00 AM &bull; 8K Tempo</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon">&#128205;</span>
+                  <span>Shanti Path, Chanakyapuri</span>
+                </div>
+                <div>
+                  <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:4px;">Pacers on Duty:</div>
+                  <div class="pacer-tags">
+                    <span class="pacer-tag">5:00/km</span>
+                    <span class="pacer-tag">5:45/km</span>
+                    <span class="pacer-tag">6:30/km</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <span class="spots-left">&#x25CF; Paved &bull; Open Road</span>
+              <button class="btn btn-primary btn-sm rsvp-btn" data-event-name="Thursday Tempo — Diplomatic Enclave (28 Sep)">RSVP &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Event 4 -->
+          <div class="event-card" data-category="race" data-distance="10K" data-location="India Gate">
+            <div>
+              <div class="card-top">
+                <div class="date-box">
+                  <div class="date-day">12</div>
+                  <div class="date-month">Oct</div>
+                </div>
+                <span class="category-badge race">Official Race</span>
+              </div>
+              <h3 class="event-title">The Chase 10K — Season Opener Race</h3>
+              <p class="event-desc">
+                Our flagship timed road race around the India Gate circuit. Chip-timed, custom medals, hydration stations, and after-party brunch.
+              </p>
+              <div class="event-meta-details">
+                <div class="meta-row">
+                  <span class="meta-icon">&#128337;</span>
+                  <span>Sun, 6:00 AM &bull; Official 10K Timed</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon">&#128205;</span>
+                  <span>Kartavya Path &bull; India Gate</span>
+                </div>
+                <div>
+                  <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:4px;">Race Inclusions:</div>
+                  <div class="pacer-tags">
+                    <span class="pacer-tag">BIB + RFID Chip</span>
+                    <span class="pacer-tag">Finisher Medal</span>
+                    <span class="pacer-tag">Post-Race Brunch</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <span class="spots-left" style="color:var(--crimson);">&#x25CF; Limited BIBs Left</span>
+              <button class="btn btn-primary btn-sm rsvp-btn" data-event-name="The Chase 10K Season Opener (12 Oct)">Register &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Event 5 -->
+          <div class="event-card" data-category="recovery" data-distance="5K" data-location="Nehru Park">
+            <div>
+              <div class="card-top">
+                <div class="date-box">
+                  <div class="date-day">15</div>
+                  <div class="date-month">Oct</div>
+                </div>
+                <span class="category-badge">Recovery</span>
+              </div>
+              <h3 class="event-title">Sunrise Recovery &amp; Mobility Flow</h3>
+              <p class="event-desc">
+                Conversational easy 5K shakeout followed by a 25-minute runner mobility and hip opener session on the lawn.
+              </p>
+              <div class="event-meta-details">
+                <div class="meta-row">
+                  <span class="meta-icon">&#128337;</span>
+                  <span>Wed, 6:15 AM &bull; 5K + Mobility</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon">&#128205;</span>
+                  <span>Nehru Park Amphitheatre lawn</span>
+                </div>
+                <div>
+                  <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:4px;">Focus:</div>
+                  <div class="pacer-tags">
+                    <span class="pacer-tag">Easy Zone 2</span>
+                    <span class="pacer-tag">Foam Rolling Demo</span>
+                    <span class="pacer-tag">All Levels</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <span class="spots-left">&#x25CF; Beginner Friendly</span>
+              <button class="btn btn-primary btn-sm rsvp-btn" data-event-name="Sunrise Recovery & Mobility (15 Oct)">RSVP &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Event 6 -->
+          <div class="event-card" data-category="track" data-distance="Hill Repeats" data-location="Ridge Forest">
+            <div>
+              <div class="card-top">
+                <div class="date-box">
+                  <div class="date-day">18</div>
+                  <div class="date-month">Oct</div>
+                </div>
+                <span class="category-badge">Hill Power</span>
+              </div>
+              <h3 class="event-title">Ridge Forest Hill Repeats &amp; Power</h3>
+              <p class="event-desc">
+                Incline repeats on the Northern Ridge gradient. Build leg power, running economy, and aerobic grit.
+              </p>
+              <div class="event-meta-details">
+                <div class="meta-row">
+                  <span class="meta-icon">&#128337;</span>
+                  <span>Sat, 6:00 AM &bull; 6K Hill Training</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon">&#128205;</span>
+                  <span>Bonta Park / Kamla Nehru Ridge</span>
+                </div>
+                <div>
+                  <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:4px;">Structure:</div>
+                  <div class="pacer-tags">
+                    <span class="pacer-tag">1.5K Warmup</span>
+                    <span class="pacer-tag">8x300m Incline</span>
+                    <span class="pacer-tag">Cool-down jog</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <span class="spots-left">&#x25CF; Trail &amp; Road</span>
+              <button class="btn btn-primary btn-sm rsvp-btn" data-event-name="Ridge Forest Hill Repeats (18 Oct)">RSVP &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Event 7 -->
+          <div class="event-card" data-category="recovery" data-distance="5K" data-location="Hauz Khas Deer Park">
+            <div>
+              <div class="card-top">
+                <div class="date-box">
+                  <div class="date-day">24</div>
+                  <div class="date-month">Oct</div>
+                </div>
+                <span class="category-badge">Social Run</span>
+              </div>
+              <h3 class="event-title">Friday Social Shakeout &amp; Coffee Run</h3>
+              <p class="event-desc">
+                Easy morning 5K through the serene paths of Deer Park and Hauz Khas Lake, followed by artisanal breakfast coffee.
+              </p>
+              <div class="event-meta-details">
+                <div class="meta-row">
+                  <span class="meta-icon">&#128337;</span>
+                  <span>Fri, 6:30 AM &bull; Social 5K</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon">&#128205;</span>
+                  <span>Deer Park Entrance, Safdarjung Enclave</span>
+                </div>
+                <div>
+                  <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:4px;">Post-Run:</div>
+                  <div class="pacer-tags">
+                    <span class="pacer-tag">Cafe Table Booked</span>
+                    <span class="pacer-tag">New Joiner Meetup</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <span class="spots-left">&#x25CF; Social Pace</span>
+              <button class="btn btn-primary btn-sm rsvp-btn" data-event-name="Friday Social Shakeout (24 Oct)">RSVP &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Event 8 -->
+          <div class="event-card" data-category="race" data-distance="21.1K" data-location="Central Delhi Circuit">
+            <div>
+              <div class="card-top">
+                <div class="date-box">
+                  <div class="date-day">02</div>
+                  <div class="date-month">Nov</div>
+                </div>
+                <span class="category-badge race">Marathon Sim</span>
+              </div>
+              <h3 class="event-title">Delhi Half Marathon Pacing Simulation</h3>
+              <p class="event-desc">
+                A full 21.1 km race rehearsal with marked kilometer splits, on-course energy gels, and pacers hitting exact target splits.
+              </p>
+              <div class="event-meta-details">
+                <div class="meta-row">
+                  <span class="meta-icon">&#128337;</span>
+                  <span>Sun, 5:30 AM &bull; 21.1 km Distance</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon">&#128205;</span>
+                  <span>Barakhamba Road to India Gate Outer Loop</span>
+                </div>
+                <div>
+                  <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:4px;">Target Bands:</div>
+                  <div class="pacer-tags">
+                    <span class="pacer-tag">Sub-1:45</span>
+                    <span class="pacer-tag">Sub-2:00</span>
+                    <span class="pacer-tag">Sub-2:15</span>
+                    <span class="pacer-tag">Sub-2:30</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <span class="spots-left" style="color:var(--volt);">&#x25CF; Dedicated Fuel Stations</span>
+              <button class="btn btn-primary btn-sm rsvp-btn" data-event-name="Half Marathon Simulation (02 Nov)">RSVP &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Event 9 -->
+          <div class="event-card" data-category="long-run" data-distance="12K" data-location="Sanjay Van">
+            <div>
+              <div class="card-top">
+                <div class="date-box">
+                  <div class="date-day">09</div>
+                  <div class="date-month">Nov</div>
+                </div>
+                <span class="category-badge">Trail &amp; Nature</span>
+              </div>
+              <h3 class="event-title">Sanjay Van Nature &amp; Dirt Trail 12K</h3>
+              <p class="event-desc">
+                Trade the asphalt for soft dirt trails inside Delhi's thickest urban forest. Clean air, quiet canopies, and undulating terrain.
+              </p>
+              <div class="event-meta-details">
+                <div class="meta-row">
+                  <span class="meta-icon">&#128337;</span>
+                  <span>Sun, 6:15 AM &bull; 12K &amp; 7K Trail</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-icon">&#128205;</span>
+                  <span>Sanjay Van Gate 3, Qutab Institutional Area</span>
+                </div>
+                <div>
+                  <div style="font-size:0.75rem; color:var(--text-dim); margin-bottom:4px;">Trail Type:</div>
+                  <div class="pacer-tags">
+                    <span class="pacer-tag">Soft Soil &amp; Gravel</span>
+                    <span class="pacer-tag">Shaded Canopies</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions">
+              <span class="spots-left">&#x25CF; Trail Shoes Optional</span>
+              <button class="btn btn-primary btn-sm rsvp-btn" data-event-name="Sanjay Van Trail 12K (09 Nov)">RSVP &rarr;</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- QUICK RSVP MODAL -->
+  <div class="modal-backdrop" id="rsvpModal">
+    <div class="modal-card">
+      <button class="close-modal-icon" id="closeModal">&times;</button>
+      <h3 id="modalEventTitle">RSVP For Session</h3>
+      <p>Confirm your spot. We will send the GPS meet pin and pacer lineup to your WhatsApp.</p>
+
+      <form id="rsvpForm">
+        <input type="hidden" id="eventField" name="event">
+        <div class="form-group">
+          <label for="rsvpName">Full Name *</label>
+          <input type="text" id="rsvpName" name="name" class="form-control" placeholder="e.g. Ankit Sharma" required>
+        </div>
+        <div class="form-group">
+          <label for="rsvpPhone">WhatsApp Number *</label>
+          <input type="tel" id="rsvpPhone" name="phone" class="form-control" placeholder="+91 98765 43210" required>
+        </div>
+        <div class="form-group">
+          <label for="rsvpPace">Expected Pace</label>
+          <select id="rsvpPace" name="pace" class="form-control">
+            <option>Under 5:00 min/km (Fast)</option>
+            <option selected>5:00–6:00 min/km (Moderate)</option>
+            <option>6:00–7:00 min/km (Cruising)</option>
+            <option>Beginner / Run-Walk</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;">
+          Confirm RSVP &amp; Join Group &rarr;
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <div>&copy; 2026 The Chase Club Delhi. All rights reserved.</div>
+      <div>
+        <a href="index.html" style="margin-right:16px;">Home</a>
+        <a href="events.html" style="margin-right:16px;">Events</a>
+        <a href="index.html#community">Community</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile Nav
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    }
+
+    // Filter Pills Logic
+    const filterPills = document.querySelectorAll('.filter-pill');
+    const eventCards = document.querySelectorAll('.event-card');
+    const searchInput = document.getElementById('searchInput');
+
+    function applyFilters() {
+      const activeFilter = document.querySelector('.filter-pill.active').dataset.category;
+      const query = searchInput.value.toLowerCase().trim();
+
+      eventCards.forEach(card => {
+        const category = card.dataset.category;
+        const textContent = card.textContent.toLowerCase();
+
+        const matchesCategory = (activeFilter === 'all' || category === activeFilter);
+        const matchesSearch = (!query || textContent.includes(query));
+
+        if (matchesCategory && matchesSearch) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        filterPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        applyFilters();
+      });
+    });
+
+    searchInput.addEventListener('input', applyFilters);
+
+    // RSVP Modal Handling
+    const rsvpModal = document.getElementById('rsvpModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalEventTitle = document.getElementById('modalEventTitle');
+    const eventField = document.getElementById('eventField');
+    const rsvpForm = document.getElementById('rsvpForm');
+
+    document.querySelectorAll('.rsvp-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const name = e.currentTarget.dataset.eventName;
+        modalEventTitle.textContent = name;
+        eventField.value = name;
+        rsvpModal.classList.add('active');
+      });
+    });
+
+    closeModal.addEventListener('click', () => rsvpModal.classList.remove('active'));
+    rsvpModal.addEventListener('click', (e) => {
+      if (e.target === rsvpModal) rsvpModal.classList.remove('active');
+    });
+
+    rsvpForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const runnerName = document.getElementById('rsvpName').value;
+      const eventName = eventField.value;
+      alert(`Awesome, ${runnerName}! You have RSVP'd for ${eventName}. Welcome to the crew!`);
+      rsvpModal.classList.remove('active');
+      rsvpForm.reset();
+    });
+  </script>
+</body>
+</html>
