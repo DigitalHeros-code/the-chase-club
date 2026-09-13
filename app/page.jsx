@@ -11,17 +11,17 @@ import { useEvents } from '../context/EventContext';
 import { ArrowRight, Calendar, MapPin, Clock, Users, Zap, Shield, Play } from 'lucide-react';
 
 export default function HomePage() {
-  const [showIntro, setShowIntro] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [selectedEventName, setSelectedEventName] = useState('');
   const { events } = useEvents();
   const router = useRouter();
 
-  // Always show intro animation on page load (redirects to /login when done)
+  // Show intro animation on first page load; skip if already seen in current session
   useEffect(() => {
     const hasSeenIntro = sessionStorage.getItem('chase_intro_seen');
-    if (!hasSeenIntro) {
-      setShowIntro(true);
+    if (hasSeenIntro === 'true') {
+      setShowIntro(false);
     }
   }, []);
 
